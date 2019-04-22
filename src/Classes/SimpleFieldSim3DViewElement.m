@@ -1,12 +1,7 @@
-%% SimpleFieldSim3DViewElement - A panel that represents a View Element
-%  to configure a SimpleFieldSim3D Graphics Object
-%
-% Andreas Husch
-% Centre Hospitalier de Luxembourg, Dep. of Neurosurgery /
-% University of Luxembourg - Luxembourg Centre for Systems Biomedicne
-% 2013 - 2017
-% mail@andreashusch.de, husch.andreas@chl.lu
 classdef SimpleFieldSim3DViewElement < uiextras.Panel
+% SimpleFieldSim3DViewElement - A panel that represents a View Element
+% to configure a SimpleFieldSim3D Graphics Object
+
     properties (Access = protected)
         sldImpedance = [];
         edtImpedance = [];
@@ -15,6 +10,7 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
         rdoSelectElectrodeContact = [];
         SimpleFieldSim3DObject = SimpleFieldSim3D.empty();
     end
+
     methods
         function this = SimpleFieldSim3DViewElement(simpleFieldSim3DObject, varargin)
             if(~isa(simpleFieldSim3DObject, 'SimpleFieldSim3D'))
@@ -68,6 +64,7 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
             set(hBox, 'Widths', [80 30 -1 30 40 40])
         end
     end
+    
     methods (Access = protected)
         function onSliderChanged(this, ~, ~)
             this.SimpleFieldSim3DObject.voltage = (get(this.sldVoltage, 'Value'));
@@ -87,3 +84,7 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
         end
     end
 end
+
+% .. AUTHORS:
+%       - Andreas Husch, Original File
+%       - Daniel Duarte Tojal, Documentation
