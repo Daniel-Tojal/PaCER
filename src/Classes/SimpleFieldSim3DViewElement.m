@@ -13,6 +13,17 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
 
     methods
         function this = SimpleFieldSim3DViewElement(simpleFieldSim3DObject, varargin)
+        % Function that creates the configuration element
+        %
+        % Parameters:
+        %
+        %    simpleFieldSim3DObject:    
+        %    varargin:                  
+        %
+        % Returns:
+        %
+        %    this:                      
+
             if(~isa(simpleFieldSim3DObject, 'SimpleFieldSim3D'))
                 error('SimpleFieldSim3DViewElement:constructor:invalidParameter', 'First parameter has to be a SimpleFieldSim3D Object');
             end
