@@ -1,13 +1,8 @@
-%% TestElectrodes - Class representing a Ben's Gun configuration of Test Electrodes (up to rotation!)
-% note that the precise rotation depends on the kinematics of the
-% sterotactic frame/the micro drive device
-%
-% Andreas Husch
-% Centre Hospitalier de Luxembourg, Dep. of Neurosurgery /
-% University of Luxembourg - Luxembourg Centre for Systems Biomedicne
-% 2014 - 2017
-% mail@andreashusch.de, husch.andreas@chl.lu
 classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable & id
+% TestElectrodes - Class representing a Ben's Gun configuration of Test Electrodes (up to rotation!)
+% Note that the precise rotation depends on the kinematics of the
+% sterotactic frame/the micro drive device
+
     properties (SetAccess = protected, GetAccess=public, SetObservable = true) 
        originalEntryPoint = NaN(3,1);
        originalTargetPoint = NaN(3,1);
@@ -41,17 +36,21 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
        electrodesEntryPoints = {}; %center, right, left,  posterior, anterior.
        electrodesTargetPoints = {}; %center, right, left,  posterior, anterior.
     end
+
     properties (Access = private)
        electrodesOffsets;
        electrodesOffsetsDirection;
     end
+
     properties(SetAccess = private, GetAccess = public, Dependent = true)
         % to control ObliqueView
         trajectoryLength = 0;
     end
+
     events
        SliderValueChanged; %OBSOLET
     end
+
     methods
         function this = TestElectrodes(varargin)
             if(nargin == 2)
@@ -155,8 +154,6 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
                     b3 = b3 / norm(b3);
                 end
                 
-                
-                
                 B = [b1,b2,b3]; %new BASE (b2,b3 forming a plane ortogonal to our electrode)
                 offsets = B * config';
                 this.electrodesOffsets = offsets;
@@ -167,7 +164,7 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
         function [base,directionVec] = getElectrodePoints(this)
             base = this.electrodesTargetPoints;
             directionVec = (this.electrodesEntryPoints-base);
-        end%fcn-getElectrodePoints
+        end %fcn-getElectrodePoints
         
     end
     
@@ -231,17 +228,17 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
             
             this.plotHandleHashMap3D(double(parentAxes)) = double(graphicsHandle);
             
-        end%fcn-initPlot3D
+        end %fcn-initPlot3D
         
-%TODO: dragging points implementieren        
+        %TODO: dragging points implementieren        
         function graphicsHandle = initPlotAxial(this, ax, CurrentPositionObject)
             % create a group object and group all plots to this "parent" handle
             graphicsHandle = hggroup('Parent', ax);
-%             keyVal = ['axial',this.String,ax];
+            % keyVal = ['axial',this.String,ax];
             keyVal = ax;
-%             [base, direcVec] = this.getElectrodePoints;
-%             curPosInMM = repmat(CurrentPositionObject.currentImagePosInMmA,1,5);
-%             factor = repmat(((curPosInMM - base(3,:))./direcVec(3,:)),3,1);
+            % [base, direcVec] = this.getElectrodePoints;
+            % curPosInMM = repmat(CurrentPositionObject.currentImagePosInMmA,1,5);
+            % factor = repmat(((curPosInMM - base(3,:))./direcVec(3,:)),3,1);
             curPosInMM = CurrentPositionObject.currentImagePosInMmA;
             base = this.targetPoint;
             direcVec = this.entryPoint - base;
@@ -266,23 +263,23 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
                 projectionPointStart = [this.entryPoint(1) projectionPoint(1)];
                 projectionPointEnd = [this.entryPoint(2) projectionPoint(2)];
                 posLineColor = [1 0 0];
-            end%if
-            %start to plot what needs to be plotted
+            end %if
+            % start to plot what needs to be plotted
             handle.CurrentPositionObject = CurrentPositionObject;
-%             this.plotHandleHashMap(1.0) = CurrentPositionObject;
+            % this.plotHandleHashMap(1.0) = CurrentPositionObject;
             this.onOrthogonalProjectionPlot(keyVal, graphicsHandle, pointStart, pointEnd, projectionPointStart, projectionPointEnd, posLineColor, handle);
         
-        end%fcn-initPlotAxial
+        end %fcn-initPlotAxial
         
         function graphicsHandle = initPlotCoronal(this, ax, CurrentPositionObject)
             % create a group object and group all plots to this "parent" handle
             graphicsHandle = hggroup('Parent', ax);
-%             keyVal = ['coronal',this.String,ax];
+            % keyVal = ['coronal',this.String,ax];
             keyVal = ax;
-%             [base, direcVec] = this.getElectrodePoints;
-%             curPosInMM = repmat(CurrentPositionObject.currentImagePosInMmC,1,5);
-%             factor = repmat(((curPosInMM - base(2,:))./direcVec(2,:)),3,1);
-%             projectionPoint = base + factor.*direcVec;
+            % base, direcVec] = this.getElectrodePoints;
+            % curPosInMM = repmat(CurrentPositionObject.currentImagePosInMmC,1,5);
+            % factor = repmat(((curPosInMM - base(2,:))./direcVec(2,:)),3,1);
+            % projectionPoint = base + factor.*direcVec;
             curPosInMM = CurrentPositionObject.currentImagePosInMmC;
             base = this.targetPoint;
             direcVec = this.entryPoint - base;
@@ -306,23 +303,24 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
                 projectionPointStart = [this.entryPoint(1) projectionPoint(1)];
                 projectionPointEnd = [this.entryPoint(3) projectionPoint(3)];
                 posLineColor = [1 0 0];
-            end%if
+            end %if
+
             %start to plot what needs to be plotted
             handle.CurrentPositionObject = CurrentPositionObject;
-%             this.plotHandleHashMap(1.0) = CurrentPositionObject;
+            % this.plotHandleHashMap(1.0) = CurrentPositionObject;
             this.onOrthogonalProjectionPlot(keyVal, graphicsHandle, pointStart, pointEnd, projectionPointStart, projectionPointEnd, posLineColor, handle);
         
-        end%fcn-initPlotCoronal
+        end %fcn-initPlotCoronal
         
         function graphicsHandle = initPlotSagital(this,ax, CurrentPositionObject)
             % create a group object and group all plots to this "parent" handle
             graphicsHandle = hggroup('Parent', ax);
-%             keyVal = ['sagital',this.String,ax];
+            % keyVal = ['sagital',this.String,ax];
             keyVal = ax;
-%             [base, direcVec] = this.getElectrodePoints;
-%             curPosInMM = repmat(CurrentPositionObject.currentImagePosInMmS,1,5);
-%             factor = repmat(((curPosInMM - base(1,:))./direcVec(1,:)),3,1);
-%             projectionPoint = base + factor.*direcVec;
+            % [base, direcVec] = this.getElectrodePoints;
+            % curPosInMM = repmat(CurrentPositionObject.currentImagePosInMmS,1,5);
+            % factor = repmat(((curPosInMM - base(1,:))./direcVec(1,:)),3,1);
+            % projectionPoint = base + factor.*direcVec;
             curPosInMM = CurrentPositionObject.currentImagePosInMmS;
             base = this.targetPoint;
             direcVec = this.entryPoint - base;
@@ -350,9 +348,9 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
             
             % Start to Plot what needs to be plotted
             handle.CurrentPositionObject = CurrentPositionObject;
-%             this.plotHandleHashMap(1.0) = CurrentPositionObject;
+            % this.plotHandleHashMap(1.0) = CurrentPositionObject;
             this.onOrthogonalProjectionPlot(keyVal, graphicsHandle, pointStart, pointEnd, projectionPointStart, projectionPointEnd, posLineColor, handle);
-        end%fcn-initPlotSagital
+        end %fcn-initPlotSagital
         
         % 'Callback' is called from inherited 2D-plot-methods (see plotableImage) to start
         % plotting
@@ -380,34 +378,34 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
                     graphicsHandles.entryPoint = line(pointStart(1),pointEnd(1), 'Marker', ...
                         'o','Color',this.color,'LineStyle','none',...
                         'MarkerSize', this.diameter, 'Parent', graphicsHandle);
-                 %   set(graphicsHandles.entryPoint, 'Parent', graphicsHandle);
+                    % set(graphicsHandles.entryPoint, 'Parent', graphicsHandle);
                     
                     graphicsHandles.targetPoint = line(pointStart(2),pointEnd(2), 'Marker', ...
                         'o','Color',this.color,'LineStyle','none',...
                         'MarkerSize', this.diameter, 'Parent', graphicsHandle);
-                  %  set(graphicsHandles.targetPoint, 'Parent', graphicsHandle);
+                    % set(graphicsHandles.targetPoint, 'Parent', graphicsHandle);
                     
                     graphicsHandles.electrode = line(pointStart,pointEnd, 'Marker', ...
                         this.marker,'Color',this.color,'LineStyle',this.lineStyle,...
                         'MarkerSize', this.diameter, 'Parent', graphicsHandle);
-                  %  set(graphicsHandles.electrode, 'Parent', graphicsHandle);
+                    % set(graphicsHandles.electrode, 'Parent', graphicsHandle);
                     
                     graphicsHandles.currentPosLine = line(projectionPointStart,projectionPointEnd, 'Marker', ...
                         this.marker,'Color',posLineColor,'LineStyle','-',...
                         'MarkerSize', this.diameter, 'Parent', graphicsHandle);
-                  %  set(graphicsHandles.currentPosLine, 'Parent', graphicsHandle);
+                    % set(graphicsHandles.currentPosLine, 'Parent', graphicsHandle);
                     
                     handle.ProjectionHandle = graphicsHandle;
                     this.plotHandleHashMap(double(keyVal)) = handle;  %speichere hggroup in HashMap
-                end%if
+                end %if
                 
                 set(keyVal, 'DataAspectRatio',[1 1 1], ...
                     'PlotBoxAspectRatioMode','auto');
                 set(keyVal, 'Position', [0 0 1 1]); %fill whole axis
                 
                 % if show2DProjection-Flag ist not set, kill all
-           else
-%                 this.onHelpDeleteItemsInHashMap({keyVal});
+            else
+            % this.onHelpDeleteItemsInHashMap({keyVal});
             end%if
         end%fcn-onOrthogonalProjectionPlot
           
@@ -419,12 +417,12 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
         %TODO: think about removing this configurable part. not needed
         %anymore
         function panel = getConfigPanel(this, varargin)
-%             stepSize = 0.5;
-%             if(this.trajectoryLength > 0)
-%                 sliderStepSize = [stepSize, stepSize] / this.trajectoryLength;
-%             else
-%                 error('TestElectrodes:getConfigPanel', 'trajectory lenght have to be greater than zero');
-%             end%if
+        % stepSize = 0.5;
+        % if(this.trajectoryLength > 0)
+        %   sliderStepSize = [stepSize, stepSize] / this.trajectoryLength;
+        % else
+        %   error('TestElectrodes:getConfigPanel', 'trajectory lenght have to be greater than zero');
+        % end %if
             
             parent = findArg('Parent', varargin{:});
             panel = uiextras.Panel('Parent',parent,'Title','TestElectrode','Padding', 3);
@@ -449,13 +447,13 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
                 'Callback', @this.onSaveClicked);
 
             
-%             uicontrol('Parent', vBox,'Style','slider', ...
-%                 'Min', 0, 'Max', this.trajectoryLength, 'SliderStep', [0.1 0.5] ./ this.trajectoryLength, ...
-%                 'Value', 0, 'Callback', @this.sliderMoved);
-            
+            % uicontrol('Parent', vBox,'Style','slider', ...
+            % 'Min', 0, 'Max', this.trajectoryLength, 'SliderStep', [0.1 0.5] ./ this.trajectoryLength, ...
+            % 'Value', 0, 'Callback', @this.sliderMoved);
+                        
 
-%             set(HBoxBox,'sizes',[-1,-1]);
-        end%fcn-getConfigPanel
+            % set(HBoxBox,'sizes',[-1,-1]);
+        end %fcn-getConfigPanel
         
         function onCheckBoxTestElectrodeClicked(this, src, ~)
             val = get(src, 'Value');
@@ -465,8 +463,8 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
             else
                 this.show2DProjection = 0;
                 this.onHelpDeleteItemsInHashMap();
-            end%if
-        end%fcn-onCheckBoxTestElectrodeClicked        
+            end %if
+        end %fcn-onCheckBoxTestElectrodeClicked        
         
         function onTransformationClicked(this, ~ ,~)
             [fileName,pathName] = uigetfile({'*.nii*'},'Select the target System (only RigidMni and RigidIntraCT)');
@@ -478,14 +476,14 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
             end%if
             [~,patId] = fileparts(folderWithoutRefSys);
                 
-%             if !=reverse % transfrom from RigidIntraCT -> RigidMni
+            % if !=reverse % transfrom from RigidIntraCT -> RigidMni
             reverse = 1 - isequal(ref,'rigidMni');
             points2RigidMni = {this.entryPoint, this.targetPoint};
             transformedPointsInMmfromRigidIntraCtToRigidMni = transformPointsFromRigidIntraCTToRigidMni(patId, points2RigidMni,reverse);
             [entry, target] = transformedPointsInMmfromRigidIntraCtToRigidMni{:};
             this.entryPoint = entry;
             this.targetPoint = target;
-        end%fcn-onTransformationClicked
+        end %fcn-onTransformationClicked
         
         
         function onSaveClicked(this, ~, ~)
@@ -496,7 +494,7 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
         function delete(this) %HN:if an testelectrode is deleted, so this method guarantees that all plots will be deleted$added 16.4.14 
             delete@plotableImage(this); % call superclass destructor
             delete@plotable3D(this);    % call superclass destructor
-%             delete@Trajectory(this);
+            % delete@Trajectory(this);
         end%   
     end
     methods(Access=public)
@@ -504,7 +502,7 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
         function onHelpDeleteItemsInHashMap(this, keyVal)
             if(nargin < 2)
                 keyVal = this.plotHandleHashMap.keys();
-            end%if
+            end %if
             if(isKey(this.plotHandleHashMap,keyVal)) 
                     value = values(this.plotHandleHashMap,keyVal);
                     for i=1:length(value)
@@ -516,14 +514,12 @@ classdef TestElectrodes < Trajectory & plotable3D & plotableImage & configurable
                             disp(['TestElectrodes:onHelpDeleteItemsInHashMap:CantGetItem']);
                         end%try/catch
                     end%for
-%                     remove(this.plotHandleHashMap, keyVal);
-            end%if
-        end%fcn-onHelpDeleteItemsInHashMap
-        
+                    % remove(this.plotHandleHashMap, keyVal);
+            end %if
+        end %fcn-onHelpDeleteItemsInHashMap
     end%methods-private
 end%class
 
-%%
 function test()
 
 elec = TestElectrodes([0; 150; 200], [80;111; 67]); %RAI
@@ -554,3 +550,7 @@ nii.pointCloudInMm('SNr+STN_L')
 %      'Parent', parentAxes)
 
 end
+
+% .. AUTHORS:
+%       - Andreas Husch, Original File
+%       - Daniel Duarte Tojal, Documentation
