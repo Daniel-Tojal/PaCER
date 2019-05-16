@@ -22,7 +22,7 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
         %
         % Returns:
         %
-        %    this:                      
+        %    this:                      Self-Reference
 
             if(~isa(simpleFieldSim3DObject, 'SimpleFieldSim3D'))
                 error('SimpleFieldSim3DViewElement:constructor:invalidParameter', 'First parameter has to be a SimpleFieldSim3D Object');
@@ -78,18 +78,53 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
     
     methods (Access = protected)
         function onSliderChanged(this, ~, ~)
+        % Function that checks if the slider has changed?
+        %
+        % Parameters:
+        %
+        %    this:      Self-Reference
+        %    ~:         Inherited Arguments
+        %
+        % Returns:
+        %
+        %    :
+
             this.SimpleFieldSim3DObject.voltage = (get(this.sldVoltage, 'Value'));
             this.SimpleFieldSim3DObject.impedance = (get(this.sldImpedance, 'Value'));
             set(this.edtVoltage, 'String', num2str(this.SimpleFieldSim3DObject.voltage));
             set(this.edtImpedance, 'String', num2str(this.SimpleFieldSim3DObject.impedance));
         end
+
         function onEdtChanged(this, ~, ~)
+        % Function that checks if the editor has changed?
+        %
+        % Parameters:
+        %
+        %    this:      Self-Reference
+        %    ~:         Inherited Argument
+        %
+        % Returns:
+        %
+        %    :
+
             this.SimpleFieldSim3DObject.voltage = str2num(get(this.edtVoltage, 'String')); %#ok<ST2NM>
             this.SimpleFieldSim3DObject.impedance = str2num(get(this.edtImpedance, 'String')); %#ok<ST2NM>
             set(this.sldVoltage, 'Value', this.SimpleFieldSim3DObject.voltage);
             set(this.sldImpedance, 'Value', this.SimpleFieldSim3DObject.impedance);
         end
+
         function onSelectedElectrodeContactChanged(this, ~, ~)
+        % Function that checks of the electrode contact has changed?
+        %
+        % Parameters:
+        %
+        %    this:      Self-Reference
+        %    ~:         Inherited Argument
+        %
+        % Returns:
+        %
+        %    :
+
             this.SimpleFieldSim3DObject.selectedElectrodeContact = ...
                 this.rdoSelectElectrodeContact.SelectedChild;
         end
