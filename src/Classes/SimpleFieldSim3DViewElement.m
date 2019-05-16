@@ -3,12 +3,12 @@ classdef SimpleFieldSim3DViewElement < uiextras.Panel
 % to configure a SimpleFieldSim3D Graphics Object
 
     properties (Access = protected)
-        sldImpedance = [];
-        edtImpedance = [];
-        sldVoltage = [];
-        edtVoltage = [];
-        rdoSelectElectrodeContact = [];
-        SimpleFieldSim3DObject = SimpleFieldSim3D.empty();
+        sldImpedance = [];              % Impedance Slider
+        edtImpedance = [];              % Impedance Editor?
+        sldVoltage = [];                % Voltage Slider
+        edtVoltage = [];                % Voltage Editor?
+        rdoSelectElectrodeContact = []; %  ?
+        SimpleFieldSim3DObject = SimpleFieldSim3D.empty(); % ?
     end
 
     methods
